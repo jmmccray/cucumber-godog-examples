@@ -16,11 +16,12 @@ type Customer struct {
 	NumberOfCards int
 }
 
-var CustomerDB = []Customer{{Name: "John", SSN: 1234567890, FICOScore: 123, NumberOfCards: 1},
-	{Name: "Jane", SSN: 987654321, FICOScore: 777, NumberOfCards: 1},
-	{Name: "Bill", SSN: 331902445, FICOScore: 501, NumberOfCards: 3},
-	{Name: "Sarah", SSN: 2247071331, FICOScore: 850, NumberOfCards: 2},
-	{Name: "Matthew", SSN: 9917071331, FICOScore: 620, NumberOfCards: 1}}
+var CustomerDB = map[int]Customer{1234567890:{Name: "John", SSN: 1234567890, FICOScore: 123, NumberOfCards: 1},
+	987654321:{Name: "Jane", SSN: 987654321, FICOScore: 777, NumberOfCards: 1},
+	331902445:{Name: "Bill", SSN: 331902445, FICOScore: 501, NumberOfCards: 3},
+	2247071331:{Name: "Sarah", SSN: 2247071331, FICOScore: 850, NumberOfCards: 2},
+	9917071331:{Name: "Matthew", SSN: 9917071331, FICOScore: 620, NumberOfCards: 1},
+}
 
 func (p Customer) GetFICOScore() int {
 	if p.FICOScore < 0 {
@@ -36,40 +37,33 @@ func (p Customer) GetCustomerSSN() int {
 	return p.SSN
 }
 
-// Checks if SSN exists in CustomerDB
 func CheckSSNValid(ssn int) bool {
-	for _, customer := range CustomerDB {
-		if customer.SSN == ssn {
-			return true
-		}
+	if _, ok := CustomerDB[ssn]; ok{
+		return true
 	}
 	return false
 }
 
-
 func GetFICOScoreFromSSN(ssn int) int {
-	for _, person := range CustomerDB {
-		if person.SSN == ssn {
-			return person.FICOScore
-		}
+	if _, ok := CustomerDB[ssn]; ok {
+		return CustomerDB[ssn].FICOScore
 	}
 	return -1
 }
 
-func CheckFICOScoreFromSSN(ssn int) error {
-	for _, person := range CustomerDB {
-		if person.SSN == ssn {
-			return nil
-		}
+func AddCustomer(customer Customer) error {
+	if customer.SSN == 0 {
+		return errors.New("ssn is 0 so it's not valid")
 	}
-	return errors.New("False")
+
+	if _, ok := CustomerDB[customer.SSN]; !ok {
+		CustomerDB[customer.SSN] = customer
+		return nil
+	}
+	return errors.New("ssn of a customer already exists in database.")
 }
 
-func AddCustomers() {
-	// TODO: add "Customer" to CustomerDB
-}
-
-func GetCustomers() []Customer {
+func GetCustomers() map[int]Customer {
 	return CustomerDB
 }
 

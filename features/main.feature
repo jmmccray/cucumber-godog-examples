@@ -4,6 +4,7 @@ Feature: CapitalOne Banking
     That gets the credit card information
     From customers
 
-    Scenario: GetFICOScore
-        Given the SSN of 1234567890 from ClientDatabase
-        Then the FICOScore of John should be 123
+    Scenario: Check the FICO Score of a Customer's SSN
+        Given the SSN 1234567890 from the ClientDatabase
+        Then the FICOScore should be 123
+        And the Customer's name attached to 1234567890 is "John"

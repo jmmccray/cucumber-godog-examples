@@ -31,14 +31,15 @@ func TestFeatures(t *testing.T) {
   }
 
 func InitializeScenario(ctx *godog.ScenarioContext) {
-	ctx.Step(`^the SSN of (\d+) from ClientDatabase$`, testSSNExistsInClientDatabase)
-	ctx.Step(`^the FICOScore of John should be (\d+)$`, theFICOScoreShouldBe)
+	ctx.Step(`^the SSN (\d+) from the ClientDatabase$`, testSSNExistsInClientDatabase)
+	ctx.Step(`^the FICOScore should be (\d+)$`, theFICOScoreShouldBe)
+	ctx.Step(`^the Customer\'s name attached to (\d+) is "([^"]*)"$`, testNameOfSSN)
 }
 
 func testSSNExistsInClientDatabase(ssn int) error {
 	err := assertExpectedAndActual(
 		assert.Equal, true, CheckSSNValid(ssn),
-		"The SSN is %d", ssn,
+		"The SSN should be %d", ssn,
 	)
 
 	if err != nil {
@@ -47,13 +48,11 @@ func testSSNExistsInClientDatabase(ssn int) error {
 	return nil
 }
 
-func testFICOScoreSSNFeature(ssn int) error {
-
-	actual := GetFICOScoreFromSSN(ssn)
+func testNameOfSSN(ssn int, name string) error {
 
 	err := assertExpectedAndActual(
-		assert.Equal, 501, actual,
-		"The FICO Score of SSN %d, should be %d", ssn, 501,
+		assert.Equal, name, CustomerDB[ssn].Name ,
+		"The Customer's name should be %s", name,
 	)
 	if err != nil {
 		return err
@@ -95,8 +94,5 @@ func TestFICOScore(t *testing.T) {
 
 	for i, test := range tests {
 		assert.Equal(t, expected[i], test.GetFICOScore())
-		_ = expected
-		_ = i
-		_ = test
 	}
 }
