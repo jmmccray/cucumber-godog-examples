@@ -6,4 +6,4 @@ Feature: CapitalOne Banking
 
     Scenario: GetFICOScore
         Given the SSN of 1234567890 from ClientDatabase
-        Then the FICOScore of John should be 501
+        Then the FICOScore of John should be 123

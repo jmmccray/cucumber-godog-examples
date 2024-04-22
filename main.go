@@ -2,7 +2,7 @@ package main
 
 // Date: 4.19.24
 // Interviewer: Amrit Khadka
-// Description:
+// Description: Create a service that returns private banking information from CapitalOne Customers
 
 import (
 	"errors"

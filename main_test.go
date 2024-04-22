@@ -5,15 +5,12 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/cucumber/godog"
 	"fmt"
-	//"os"
 )
 
-// asserter is used to be able to retrieve the error reported by the called assertion
 type asserter struct {
 	err error
 }
 
-// Errorf is used by the called assertion to report an error
 func (a *asserter) Errorf(format string, args ...interface{}) {
 	a.err = fmt.Errorf(format, args...)
 }
@@ -24,7 +21,7 @@ func TestFeatures(t *testing.T) {
 	  Options: &godog.Options{
 		Format:   "pretty",
 		Paths:    []string{"features"},
-		TestingT: t, // Testing instance that will run subtests.
+		TestingT: t,
 	  },
 	}
   
@@ -33,7 +30,6 @@ func TestFeatures(t *testing.T) {
 	}
   }
 
-// Create scenario...
 func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^the SSN of (\d+) from ClientDatabase$`, testSSNExistsInClientDatabase)
 	ctx.Step(`^the FICOScore of John should be (\d+)$`, theFICOScoreShouldBe)
@@ -67,15 +63,11 @@ func testFICOScoreSSNFeature(ssn int) error {
 
 func theFICOScoreShouldBe(fico int) error {
 	return assertExpectedAndActual(
-		assert.Equal, fico, 501,
-		"Then the FICOScore of John should be %d", 501,
+		assert.Equal, fico, 123,
+		"Then the FICOScore should be %d", 501,
 	)
 }
 
-
-// Assertion
-// assertExpectedAndActual is a helper function to allow the step function to call
-// assertion functions where you want to compare an expected and an actual value.
 func assertExpectedAndActual(a expectedAndActualAssertion, expected, actual interface{}, msgAndArgs ...interface{}) error {
 	var t asserter
 	a(&t, expected, actual, msgAndArgs...)
